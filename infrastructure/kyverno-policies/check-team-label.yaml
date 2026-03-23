@@ -1,0 +1,22 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: check-team-label
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+  - name: require-team-label
+    skipBackgroundRequests: true
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: "The label 'team' is required for all pods."
+      allowExistingViolations: true
+      pattern:
+        metadata:
+          labels:
+            team: "?*" # Ensures the label exists and isn't empty

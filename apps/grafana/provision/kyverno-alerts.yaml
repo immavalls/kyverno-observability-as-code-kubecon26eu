@@ -1,0 +1,98 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: kyverno
+      folder: kyverno
+      interval: 1m
+      rules:
+        - uid: cfgtyqqnwa134e
+          title: admission-fails
+          dashboardUid: 472
+          condition: C
+          data:
+            - refId: A
+              queryType: alerting
+              relativeTimeRange:
+                from: 300
+                to: 0
+              datasourceUid: kyverno-prometheus-ds
+              model:
+                datasource:
+                    type: prometheus
+                    uid: kyverno-prometheus-ds
+                editorMode: code
+                exemplar: false
+                expr: sum(increase(kyverno_policy_results_total{rule_execution_cause="admission_request", rule_result="fail"}[5m])) by (rule_result)
+                expression: ""
+                instant: false
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                queryType: alerting
+                range: true
+                refId: A
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: avg
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: mean
+                refId: B
+                type: reduce
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: avg
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: $B > 2
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: math
+          dashboardUid: adf2c78
+          panelId: 15
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            __dashboardUid__: adf2c78
+            __panelId__: "15"
+          labels: {}
+          isPaused: false
+          notification_settings:
+            receiver: grafana-default-email

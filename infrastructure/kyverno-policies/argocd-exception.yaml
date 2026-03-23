@@ -1,0 +1,18 @@
+apiVersion: kyverno.io/v2beta1
+kind: PolicyException
+metadata:
+  name: argocd-exception
+  namespace: kyverno
+spec:
+  exceptions:
+    - policyName: require-labels
+      ruleNames:
+        - check-required-labels
+    - policyName: disallow-privileged-containers
+      ruleNames:
+        - check-privileged
+  match:
+    any:
+      - resources:
+          namespaces:
+            - argocd

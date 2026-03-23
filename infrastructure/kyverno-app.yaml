@@ -1,0 +1,84 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  destination:
+    namespace: kyverno
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: kyverno
+    repoURL: https://kyverno.github.io/kyverno
+    targetRevision: 3.7.1
+    helm:
+      values: |
+        # Webhook configuration
+        webhookLabels:
+          app.kubernetes.io/managed-by: argocd
+        
+        # 1. Global Metrics Configuration
+        metricsConfig:
+          metricsExposure:
+            kyverno_policy_rule_info_total:
+              enabled: true
+            kyverno_admission_requests:
+              enabled: true
+            kyverno_admission_review_duration_seconds:
+              enabled: true
+            kyverno_policy_execution_duration_seconds:
+              enabled: true
+
+        # 2. Admission Controller Tracing & Metrics
+        admissionController:
+          replicas: 1
+          container:
+            resources:
+              limits:
+                memory: 512Mi
+          metricsService:
+            create: true
+            port: 8000
+          tracing:
+            enabled: true
+            address: tempo.kyverno.svc.cluster.local
+            port: 4317
+
+        # 3. Background Controller Tracing & Metrics
+        backgroundController:
+          metricsService:
+            create: true
+          tracing:
+            enabled: true
+            address: tempo.kyverno.svc.cluster.local
+            port: 4317
+
+        # 4. Cleanup Controller Tracing & Metrics
+        cleanupController:
+          metricsService:
+            create: true
+          tracing:
+            enabled: true
+            address: tempo.kyverno.svc.cluster.local
+            port: 4317
+
+        # 5. Reports Controller Tracing & Metrics
+        reportsController:
+          metricsService:
+            create: true
+          tracing:
+            enabled: true
+            address: tempo.kyverno.svc.cluster.local
+            port: 4317
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+      - Replace=true

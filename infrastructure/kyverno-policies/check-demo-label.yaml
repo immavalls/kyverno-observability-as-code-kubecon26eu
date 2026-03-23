@@ -1,0 +1,25 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-nginx-label
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: check-for-demo-label
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    preconditions:
+      any:
+      - key: "{{ request.object.spec.containers[0].image }}"
+        operator: Equals
+        value: "nginx*"
+    validate:
+      message: "Nginx pods must have the label 'demo-approved: true' to be deployed."
+      pattern:
+        metadata:
+          labels:
+            demo-approved: "true"

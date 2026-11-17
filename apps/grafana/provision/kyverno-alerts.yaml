@@ -7,7 +7,6 @@ groups:
       rules:
         - uid: cfgtyqqnwa134e
           title: admission-fails
-          dashboardUid: 472
           condition: C
           data:
             - refId: A
@@ -84,15 +83,13 @@ groups:
                 maxDataPoints: 43200
                 refId: C
                 type: math
-          dashboardUid: adf2c78
+          dashboardUid: Rg8lWBG7k
           panelId: 15
           noDataState: NoData
           execErrState: Error
           for: 1m
           annotations:
-            __dashboardUid__: adf2c78
+            __dashboardUid__: Rg8lWBG7k
             __panelId__: "15"
           labels: {}
           isPaused: false
-          notification_settings:
-            receiver: grafana-default-email

@@ -80,7 +80,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 ## Act 3: Metrics with Prometheus and Grafana (~2 min)
 
-1. Open the **Kyverno Metrics** dashboard in Grafana: admission request rate, policy execution latency, policy results.
+1. Open the [Kyverno Metrics dashboard](http://localhost:3000/d/Rg8lWBG7k/kyverno-metrics?orgId=1&from=now-1h&to=now&timezone=browser&var-DS_PROMETHEUS_KYVERNO=kyverno-prometheus-ds&var-cluster=$__all) in Grafana: admission request rate, policy execution latency, policy results.
 2. Generate activity and watch the panels move:
 
    ```bash
@@ -93,14 +93,14 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 ## Act 4: Traces with Tempo (~3 min)
 
-1. Grafana > **Explore** > datasource **Tempo** > TraceQL:
+1. Open [Grafana Explore with Tempo](http://localhost:3000/explore?schemaVersion=1&orgId=1&panes=%7B%22a%22%3A%7B%22datasource%22%3A%22tempo-datasource%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22tempo%22%2C%22uid%22%3A%22tempo-datasource%22%7D%2C%22queryType%22%3A%22traceql%22%2C%22query%22%3A%22%7Bresource.service.name%3D%5C%22kyverno-admission-controller%5C%22%7D%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-15m%22%2C%22to%22%3A%22now%22%7D%7D%7D) (datasource **Tempo**, TraceQL, last 15 minutes) and run:
 
    ```
    {resource.service.name="kyverno-admission-controller"}
    ```
 
 2. Open a trace: the admission request, then a `POLICY /<name>` span per policy with rule spans beneath.
-3. Narrow to the denied pod's rule:
+3. Narrow to the denied pod's rule, or [open it directly](http://localhost:3000/explore?schemaVersion=1&orgId=1&panes=%7B%22a%22%3A%7B%22datasource%22%3A%22tempo-datasource%22%2C%22queries%22%3A%5B%7B%22refId%22%3A%22A%22%2C%22datasource%22%3A%7B%22type%22%3A%22tempo%22%2C%22uid%22%3A%22tempo-datasource%22%7D%2C%22queryType%22%3A%22traceql%22%2C%22query%22%3A%22%7Bresource.service.name%3D%5C%22kyverno-admission-controller%5C%22%20%26%26%20name%3D%5C%22RULE%20check-for-demo-label%5C%22%7D%22%7D%5D%2C%22range%22%3A%7B%22from%22%3A%22now-15m%22%2C%22to%22%3A%22now%22%7D%7D%7D):
 
    ```
    {resource.service.name="kyverno-admission-controller" && name="RULE check-for-demo-label"}

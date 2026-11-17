@@ -81,18 +81,15 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ## Act 3: Metrics and alerts with Prometheus and Grafana (~3 min)
 
 1. Open the [Kyverno Metrics dashboard](http://localhost:3000/d/Rg8lWBG7k/kyverno-metrics?orgId=1&from=now-1h&to=now&timezone=browser&var-DS_PROMETHEUS_KYVERNO=kyverno-prometheus-ds&var-cluster=$__all) in Grafana: admission request rate, policy execution latency, policy results.
-2. Generate activity, passes and fails, and watch the panels move. **Start this first thing in Act 3**: the `admission-fails` alert needs a sustained burst of failures and takes about 2 to 3 minutes to fire.
+2. Generate load with failing requests and watch the panels move. **Start this first thing in Act 3**: the `admission-fails` alert needs a sustained burst of failures and takes about 2 to 3 minutes to fire.
 
    ```bash
-   for i in $(seq 1 5); do
-     kubectl run demo-pass-$i --image=nginx:latest --labels="demo-approved=true" -n demo-app
-   done
    for i in $(seq 1 30); do
      kubectl run demo-fail-$i --image=nginx:latest --labels="demo-approved=false" -n demo-app
    done
    ```
 
-   The 30 `demo-fail` requests are all denied, so no pods are left behind.
+   All 30 requests are denied by Kyverno, so no pods are created and there is nothing to clean up.
 
 3. Open the [admission-fails alert rule](http://localhost:3000/alerting/grafana/cfgtyqqnwa134e/view) (all rules: <http://localhost:3000/alerting/list>). It goes **Normal, then Pending, then Firing** once the denied requests pass the threshold (mean of the failed results over 5 minutes above 2). The rule comes from [kyverno-alerts.yaml](./apps/grafana/provision/kyverno-alerts.yaml).
 

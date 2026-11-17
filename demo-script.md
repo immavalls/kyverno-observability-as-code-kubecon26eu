@@ -90,7 +90,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
    All 30 requests are denied by Kyverno, so no pods are created and there is nothing to clean up.
 
-2. **Switch to an accessible theme** while the alert warms up. In Grafana click the user icon (top right), then **Change theme**, then choose **Deuteranopia/Protanopia Light** (experimental, designed for colour-vision deficiency). Mention the new Grafana UI refresh, which also ships light and dark themes with palettes designed to meet accessibility standards: [An early look at the Grafana UI refresh](https://grafana.com/blog/an-early-look-at-the-grafana-ui-refresh-building-a-clearer-more-consistent-user-experience/). Self-managed Grafana needs the `grafana.visualDesignRefresh` feature toggle enabled.
+2. **Change the theme** while the alert warms up. Mention that since Grafana 13.3 there is a UI refresh ([An early look at the Grafana UI refresh](https://grafana.com/blog/an-early-look-at-the-grafana-ui-refresh-building-a-clearer-more-consistent-user-experience/)), and that users can switch to a theme that is more accessible for them. As an example: click the user icon (top right), then **Change theme**, then select **Deuteranopia/Protanopia Light**.
 
 3. Open the [Kyverno Metrics dashboard](http://localhost:3000/d/Rg8lWBG7k/kyverno-metrics?orgId=1&from=now-1h&to=now&timezone=browser&var-DS_PROMETHEUS_KYVERNO=kyverno-prometheus-ds&var-cluster=$__all): admission request rate, policy execution latency, policy results. The alert state changes show up as annotations on the **Admission Review Results (per-rule)** panel.
 

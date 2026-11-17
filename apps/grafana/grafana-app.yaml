@@ -48,25 +48,6 @@ spec:
               label: grafana_alert
               labelValue: "1"
               searchNamespace: ALL
-          
-          dashboards:
-            default:
-              kyverno-dashboard:
-                # Use the ref from Source 2 to pull the content
-                json: |
-                  {{ "{{" }} .Files.Get "$data-repo/apps/grafana/provision/kyverno-dashboard.json" {{ "}}" }}
-          extraConfigMaps:
-            kyverno-alerts-provisioning:
-              labels:
-                grafana_alert: "1" # Matches the sidecar label above
-              data:
-                # Use the $data-repo reference to pull the file
-                alerts.yaml: |
-                  {{ "{{" }} .Files.Get "$data-repo/apps/grafana/provision/kyverno-alerts.yaml" {{ "}}" }}
-    # Source 2: Git Repo
-    - repoURL: file:///usr/local/repo
-      targetRevision: HEAD
-      ref: data-repo 
 
   destination:
     server: https://kubernetes.default.svc

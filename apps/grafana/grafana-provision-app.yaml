@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-provision
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # Builds the dashboard and alert ConfigMaps from apps/grafana/provision
+    repoURL: https://github.com/immavalls/kyverno-observability-as-code-kubecon26eu.git
+    targetRevision: HEAD
+    path: apps/grafana/provision
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

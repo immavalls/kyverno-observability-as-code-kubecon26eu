@@ -16,7 +16,7 @@ spec:
       any:
       - key: "{{ request.object.spec.containers[0].image }}"
         operator: Equals
-        value: "nginx*"
+        value: "*nginx*"
     validate:
       message: "Nginx pods must have the label 'demo-approved: true' to be deployed."
       pattern:

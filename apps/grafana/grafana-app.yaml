@@ -9,10 +9,15 @@ spec:
     # Source 1: Remote Helm Chart
     - repoURL: https://grafana-community.github.io/helm-charts
       chart: grafana
-      targetRevision: 10.5.15
+      targetRevision: 14.5.0
       helm:
         values: |
           adminPassword: admin
+
+          # Public preview of the new Grafana UI (13.3+): https://grafana.com/blog/an-early-look-at-the-grafana-ui-refresh-building-a-clearer-more-consistent-user-experience/
+          grafana.ini:
+            feature_toggles:
+              enable: grafana.visualDesignRefresh
           
           # Provision the data source directly here to avoid mount errors
           datasources:

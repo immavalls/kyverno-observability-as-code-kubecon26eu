@@ -2,8 +2,6 @@
 
 Step-by-step script for the live demo (about 12 minutes). Setup instructions are in the [README](./README.md).
 
-> **Note:** this script follows the current setup (ArgoCD, Kyverno, Prometheus, Tempo, Grafana). The README may still be updated to match it.
-
 ## Before you start
 
 ```bash

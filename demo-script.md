@@ -45,7 +45,11 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ## Act 1: GitOps with ArgoCD (~2 min)
 
 1. In the ArgoCD UI show the applications: `kyverno`, `kyverno-policies`, `grafana-standalone` (Synced / Healthy).
+
+   ![ArgoCD applications, all Healthy and Synced](./images/act1-argocd-apps.png)
 2. Open `kyverno-policies` and show the policies it deploys from [infrastructure/kyverno-policies](./infrastructure/kyverno-policies).
+
+   ![ArgoCD kyverno-policies application tree with its ClusterPolicies](./images/act1-kyverno-policies-tree.png)
 3. Everything, including the Grafana dashboard and alerts, comes from this repo. That is the Observability-as-Code idea.
 
 ## Act 2: Policies in action (~3 min)
@@ -94,6 +98,8 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 3. Open the [Kyverno Metrics dashboard](http://localhost:3000/d/Rg8lWBG7k/kyverno-metrics?orgId=1&from=now-1h&to=now&timezone=browser&var-DS_PROMETHEUS_KYVERNO=kyverno-prometheus-ds&var-cluster=$__all): admission request rate, policy execution latency, policy results. The alert state changes show up as annotations on the **Admission Review Results (per-rule)** panel.
 
+   ![Kyverno Metrics dashboard with the admission-fails alert annotation](./images/act3-dashboard-annotations.png)
+
 4. Open the [admission-fails alert rule](http://localhost:3000/alerting/grafana/cfgtyqqnwa134e/view) (all rules: <http://localhost:3000/alerting/list>). It goes **Normal, then Pending, then Firing** once the denied requests pass the threshold (mean of the failed results over 5 minutes above 2).
 
 ## Act 4: Traces with Tempo (~3 min)
@@ -112,6 +118,8 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
    ```
 
    Click the span and show its attributes: resource name and namespace, operation, rule result and message.
+
+   ![Tempo trace of a denied pod with the RULE check-for-demo-label span](./images/act4-tempo-trace.png)
 4. Close: policy latency from traces and metrics can drive SLOs and error-budget alerts.
 
 ## Clean-up

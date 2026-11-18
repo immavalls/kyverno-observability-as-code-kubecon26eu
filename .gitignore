@@ -1,0 +1,49 @@
+# Allowlist: ignore everything by default, then unignore the intended project files.
+*
+
+# Descend into any folder so the file types below are found at any depth.
+!*/
+
+!.gitignore
+!LICENSE
+!README.md
+
+# Typical project files: docs, manifests, config, scripts and images.
+!*.md
+!*.yaml
+!*.yml
+!*.json
+!*.sh
+!*.tpl
+!*.txt
+!*.toml
+!*.png
+!*.jpg
+!*.jpeg
+!*.gif
+!*.svg
+
+# Secrets and local state stay excluded even though the types above are allowed.
+.env
+*.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+kubeconfig
+*.kubeconfig
+.aws/
+.gcp/
+.azure/
+*credentials*.json
+*-sa-key.json
+*.secret.yaml
+*.secret.yml
+
+# Raw agent/session logs and tooling noise.
+.claude/
+node_modules/
+*.log
+.DS_Store
